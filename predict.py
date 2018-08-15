@@ -25,7 +25,7 @@ import pandas as pd
 import math as mat
 import pickle
 
-APP_NAME = "clonizo_test"
+APP_NAME = "predict"
 
 # In[9]:
 
@@ -87,20 +87,15 @@ def findNearestNeighbour_client(train_all,test_all,num_neighbours,num_indices,tr
 
 def main(sc):
     sqlContext = SQLContext(sc)
-    input_path = '/user/root/transorg/hp/hp_input_test'
-    output_path = '/user/root/transorg/hp/hp_output'
-    model_path = '/user/root/transorg/hp/hp_model'
-    model_info_path = model_path + '/hp_model_info'
-    model_scaler_path = model_path + '/hp_train_test_scaler'
-    model_train_set_path = model_path + '/hp_model_train_set'
-
-    # In[3]:
+    input_path = ''
+    output_path = ''
+    model_path = ''
+    model_info_path = model_path + ''
+    model_scaler_path = model_path + ''
+    model_train_set_path = model_path + ''
 
     #IMPORT THE CLIENT DATA
     client_data = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true').load(input_path)
-
-
-    # In[4]:
 
     # Load the models and train data from Training Interface paths
     model_info = sc.pickleFile(model_info_path).flatMap(lambda x: x.items()).collectAsMap()
@@ -110,20 +105,11 @@ def main(sc):
     col_names = model_info['col_names']
     sorted_top_varimp = model_info['varimp']
 
-
-    # In[5]:
-
     # Pulling data for most import 6 features
     client_data = client_data.select(client_data.u_msisdn.cast('string'),*(col(c).cast("double").alias(c) for c in col_names))
 
-
-    # In[6]:
-
     # Defines that the first column is the unique ID, the last one contains the labels and all the ones in between are the given features
     client_master = client_data.rdd.map(lambda r: Row(cust_id=r[0],features=Vectors.dense(r[1:]))).toDF()
-
-
-    # In[7]:
 
     # Scale and normaize the features so that all features can be compared
     # and create a new column for the features
@@ -139,10 +125,7 @@ def main(sc):
     #The old features have been replaced with their scaled versions and thus
     # we no longer care about the old, unbalanced features
     client_master = client_master.drop('features')
-
-
-    # In[8]:
-
+    
     sqlContext.registerDataFrameAsTable(df_master_new,"df_master_train_table")
 
     # Remove the negative labels as only the positive ones are important
@@ -157,27 +140,16 @@ def main(sc):
 
     sqlContext.dropTempTable("df_master_train_table")
 
-    # In[11]:
-
     nn = 1000
     popshared = 0.30
     num_indices = (int)(popshared * client_master.count())
     tree_type = "kd_tree"
     nn,popshared,num_indices
 
-
-    # In[12]:
-
     train_pd = train_all_client.toPandas()
     test_pd = client_master.toPandas()
 
-
-    # In[13]:
-
     freq_table = findNearestNeighbour_client(train_pd,test_pd,nn,num_indices,tree_type)
-
-
-    # In[14]:
 
     sqlContext.createDataFrame(freq_table[['cust_id','freq']],).repartition(1).write.format("com.databricks.spark.csv").save(output_path)
 
