@@ -5,7 +5,7 @@ Versions: Spark: 2.1.1, Python: 3.5
 - Objective of the project is to find customer lookalikes (similar customers) in a large population using algorithms like Random Forest, KNN and KD-Trees
 - Cannot share data as it is sensitive to clients but need to follow the following format:
 
-Train Data:
+# Train Data:
 
 col 1 -> ID
 
@@ -13,7 +13,7 @@ col 2...n-1 -> features
 
 col n -> Label (Binary)
 
-Test Data:
+# Test Data:
 
 col 1 -> ID
 
