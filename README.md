@@ -6,12 +6,17 @@ Versions: Spark: 2.1.1, Python: 3.5
 - Cannot share data as it is sensitive to clients but need to follow the following format:
 
 Train Data:
+
 col 1 -> ID
+
 col 2...n-1 -> features
+
 col n -> Label (Binary)
 
 Test Data:
+
 col 1 -> ID
+
 col 2 -> features
 
 - The train code will treat 1 as minority class and generate the 30% customer IDs that are lookalikes after running predict.py
