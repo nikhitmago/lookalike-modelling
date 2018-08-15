@@ -28,7 +28,7 @@ import pandas as pd
 import math as mat
 import pickle
 
-APP_NAME = "clonizo_train"
+APP_NAME = "train"
 
 # Calculate 'num_neighbours' nearest neighbours using KNN algorithm using 'tree_type'
 # (Ball_tress, Kd_trees etc.)
@@ -87,11 +87,11 @@ def findNearestNeighbour(train_broadcast,test_broadcast,num_neighbours,num_indic
 def main(sc):
     sqlContext = SQLContext(sc)
     # In[1]:
-    input_path = '/user/root/transorg/hp/hp_input_train'
-    model_path = '/user/root/transorg/hp/hp_model'
-    model_info_path = model_path + '/hp_model_info'
-    model_scaler_path = model_path + '/hp_train_test_scaler'
-    model_train_set_path = model_path + '/hp_model_train_set'
+    input_path = ''
+    model_path = ''
+    model_info_path = model_path + ''
+    model_scaler_path = model_path + ''
+    model_train_set_path = model_path + ''
 
     # Import the table of features and labels into dataframes
     df_data = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true').load(input_path)
